@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/list"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:title="Days list" />
+    <item
+        android:id="@+id/notes"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:title="Notes" />
+    <item
+        android:id="@+id/web"
+        android:icon="@drawable/ic_web_black_24dp"
+        android:title="Web" />
+    <item
+        android:id="@+id/alarm"
+        android:icon="@drawable/ic_access_alarm_black_24dp"
+        android:title="Alarm" />
+    <item
+        android:id="@+id/exit"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="Exit" />
+</menu>
