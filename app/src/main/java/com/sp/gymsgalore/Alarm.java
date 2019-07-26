@@ -122,16 +122,21 @@ public class Alarm extends AppCompatActivity {
         Date today = new Date();
         cal.set(Calendar.SECOND, 00);
         String[] hrMin = time.split(":");
-        //System.out.println("hrMin[0]:" + hrMin[0]);
-        //System.out.println("hrMin[1]:" + hrMin[1]);
-        cal.set(Calendar.HOUR, Integer.parseInt(hrMin[0]));
+        System.out.println("hrMin[0]:" + Integer.parseInt(hrMin[0]));
+        System.out.println("hrMin[1]:" + hrMin[1]);
+        cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hrMin[0]));
         cal.set(Calendar.MINUTE, Integer.parseInt(hrMin[1]));
-
+        Date d = cal.getTime();
         long diff = cal.getTime().getTime() - today.getTime();
+        System.out.println("Date : " + today.toString());
+        System.out.println("cal : " + cal.toString());
+        System.out.println("d : " + d.toString());
+        System.out.println(cal.getTime().getTime());
+        System.out.println(today.getTime());
         if(diff < 0){
-            //System.out.println("Alarm timing already over");
+            System.out.println("Alarm timing already over");
         }
-        //System.out.println("DIfference : " + diff);
+        System.out.println("DIfference : " + diff);
         long futureInMillis = SystemClock.elapsedRealtime() + diff;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
@@ -144,21 +149,21 @@ public class Alarm extends AppCompatActivity {
     public void updateDb(String time , String desc, String alarmId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
-        //System.out.println("keyArray : " + keyArray.toString());
+        System.out.println("keyArray : " + keyArray.toString());
         boolean overall = false;
         for(int i = 0 ; i < keyArray.size() ; i++){
             boolean found = false;
             for(int j = 0 ; j < keyArray.size() ; j++){
-                //System.out.println("compare 1 : " + keyArray.get(j));
-                //System.out.println("compare 2 : " + ("alarm" + i));
-                //System.out.println("compare 3 : " + keyArray.get(j).equals("alarm" + i));
+//                System.out.println("compare 1 : " + keyArray.get(j));
+//                System.out.println("compare 2 : " + ("alarm" + i));
+//                System.out.println("compare 3 : " + keyArray.get(j).equals("alarm" + i));
                 if(keyArray.get(j).equals("alarm" + i)){
                     found = true;
                     break;
                 }
             }
             if(!found){
-                //System.out.println("compare 4 : set id to alarm"+ i);
+//                System.out.println("compare 4 : set id to alarm"+ i);
                 alarmId = "alarm"+ i;
                 overall = true;
             }
@@ -179,12 +184,11 @@ public class Alarm extends AppCompatActivity {
         }
     }
 
-    //Deletion of alerts
     public void deleteDb(String position) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
         String[] separated = position.split("   |   ");
-        //System.out.println("trying to delete : " + separated[0]);
+        System.out.println("trying to delete : " + separated[0]);
         try{
             myRef.child("users").child(separated[0]).removeValue();
             readDb();
@@ -193,7 +197,6 @@ public class Alarm extends AppCompatActivity {
         }
     }
 
-    // read values from DB
     public void readDb() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
@@ -219,7 +222,7 @@ public class Alarm extends AppCompatActivity {
                 keyArray  = new ArrayList< String >();
                 for ( String key : allAlarms.keySet() ) {
                     keyArray.add(key);
-                    //System.out.println( key );
+//                    System.out.println( key );
                     try{
                         JSONObject alarmObj =  new JSONObject((String)allAlarms.get(key));
                         asd.add( key + "   |   " + alarmObj.get("time") + "   |   " + alarmObj.get("desc"));
@@ -247,7 +250,6 @@ public class Alarm extends AppCompatActivity {
         });
     }
 
-    // Display pop up window
     public void showItem(String position){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final String pos = position;
@@ -273,13 +275,13 @@ public class Alarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 if(((CheckBox) findViewById(R.id.checkBox)).isChecked()){
-                    //System.out.println("input.getText().toString() : " + input.getText().toString());
+                    System.out.println("input.getText().toString() : " + input.getText().toString());
                     String[] separated = pos.split("   |   ");
 
                     updateRealDb(input.getText().toString() , separated[4] , separated[0]);
                 }
                 else{
-                    //System.out.println("input.getText().toString() : " + input.getText().toString());
+                    System.out.println("input.getText().toString() : " + input.getText().toString());
                     String[] separated = pos.split("   |   ");
 
                     updateRealDb(separated[2] , input.getText().toString() , separated[0]);
@@ -303,13 +305,14 @@ public class Alarm extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //System.out.println("We are in alarm class");
+        System.out.println("We are in alarm class");
 
         createNotificationChannel();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Log.i("CREATION","We are in alarm class");
 
         final Button button = (Button) findViewById(R.id.btnAddAlarm);
 
