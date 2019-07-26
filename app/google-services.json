@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "268199913533",
+    "firebase_url": "https://gymsgalorecontingency3.firebaseio.com",
+    "project_id": "gymsgalorecontingency3",
+    "storage_bucket": "gymsgalorecontingency3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268199913533:android:8ecd2bcb00844e51",
+        "android_client_info": {
+          "package_name": "com.sp.gymsgalore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268199913533-8cnqcgvicgbs74eap36shor2bvdia5m9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sp.gymsgalore",
+            "certificate_hash": "6fe86679c8e8e543b11a9ed0a166493534ad7afe"
+          }
+        },
+        {
+          "client_id": "268199913533-o8fh90qkpkra1t3ga8n3jd049910uh0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8vkxcz2ytSvdWi7C1NtKe9DTq7J4QRqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268199913533-o8fh90qkpkra1t3ga8n3jd049910uh0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
