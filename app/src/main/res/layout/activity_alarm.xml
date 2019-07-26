@@ -56,20 +56,20 @@
             android:layout_marginTop="120dp"
             android:text="Current alarms activated"
             app:layout_constraintStart_toStartOf="@+id/appBarLayout"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnAddAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="152dp"
             android:text="Add Alarm"
-            app:layout_constraintStart_toEndOf="@+id/editText3"
+            app:layout_constraintStart_toEndOf="@+id/timePicker"
             app:layout_constraintTop_toTopOf="@+id/textView9" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/timePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="72dp"
@@ -80,6 +80,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
         <ListView
+            android:id="@+id/listAlarm"
             android:layout_width="382dp"
             android:layout_height="336dp"
             android:layout_marginStart="8dp"
@@ -106,7 +107,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/tbDesc"
             android:layout_width="179dp"
             android:layout_height="48dp"
             android:layout_marginStart="20dp"
@@ -115,7 +116,7 @@
             android:inputType="textPersonName"
             android:text="desc"
             app:layout_constraintStart_toEndOf="@+id/textView12"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>
