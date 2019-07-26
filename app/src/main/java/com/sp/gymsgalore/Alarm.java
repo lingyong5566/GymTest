@@ -1,10 +1,20 @@
 package com.sp.gymsgalore;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,10 +38,14 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Alarm extends AppCompatActivity {
@@ -53,6 +67,79 @@ public class Alarm extends AppCompatActivity {
         catch (Exception e){
         }
     }
+
+
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Testing";
+            String description = "Testing";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Testing", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public static String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public void triggerNotification(int id , String text , String time){
+
+
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Testing")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Alarm from App!!!!!!")
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Intent intent = new Intent(Alarm.this, Alarm.class);
+        PendingIntent activity = PendingIntent.getActivity(Alarm.this, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(activity);
+
+        Notification notification = builder.build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+// notificationId is a unique int for each notification that you must define
+//        notificationManager.notify(id, builder.build());
+        Context context = Alarm.this;
+        Intent notificationIntent = new Intent(context, MyNotificationPublisher.class);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, id);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        Date today = new Date();
+        cal.set(Calendar.SECOND, 00);
+        String[] hrMin = time.split(":");
+        System.out.println("hrMin[0]:" + hrMin[0]);
+        System.out.println("hrMin[1]:" + hrMin[1]);
+        cal.set(Calendar.HOUR, Integer.parseInt(hrMin[0]));
+        cal.set(Calendar.MINUTE, Integer.parseInt(hrMin[1]));
+
+        long diff = cal.getTime().getTime() - today.getTime();
+        if(diff < 0){
+            System.out.println("Alarm timing already over");
+        }
+        System.out.println("DIfference : " + diff);
+        long futureInMillis = SystemClock.elapsedRealtime() + diff;
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+
 
 
 
@@ -247,6 +334,8 @@ public class Alarm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("We are in alarm class");
+
+        createNotificationChannel();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -279,6 +368,8 @@ public class Alarm extends AppCompatActivity {
 //                updateDb("14:30" , "For Class", "alarm2");
                 EditText chooseTime = findViewById(R.id.timePicker);
                 EditText tbDesc = findViewById(R.id.tbDesc);
+
+                triggerNotification(2 , tbDesc.getText().toString() , chooseTime.getText().toString());
                 updateDb(chooseTime.getText().toString() , tbDesc.getText().toString() , "alarm" + (counter + 1));
                 readDb();
                 // Time Picker Implementation
