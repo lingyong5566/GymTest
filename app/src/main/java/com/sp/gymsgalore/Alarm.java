@@ -51,7 +51,7 @@ import java.util.Map;
 public class Alarm extends AppCompatActivity {
 
     int counter = 0;
-    ArrayList< String > keyArray;
+    ArrayList< String > keyArray = new ArrayList<String>();
 
 
     //To update each individual record
@@ -149,39 +149,46 @@ public class Alarm extends AppCompatActivity {
     public void updateDb(String time , String desc, String alarmId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
-        System.out.println("keyArray : " + keyArray.toString());
         boolean overall = false;
-        for(int i = 0 ; i < keyArray.size() ; i++){
-            boolean found = false;
-            for(int j = 0 ; j < keyArray.size() ; j++){
+        System.out.println("KEYARRAYSIZE : " + keyArray.size());
+        try{
+
+            for(int i = 0 ; i < keyArray.size() ; i++){
+                boolean found = false;
+                for(int j = 0 ; j < keyArray.size() ; j++){
 //                System.out.println("compare 1 : " + keyArray.get(j));
 //                System.out.println("compare 2 : " + ("alarm" + i));
 //                System.out.println("compare 3 : " + keyArray.get(j).equals("alarm" + i));
-                if(keyArray.get(j).equals("alarm" + i)){
-                    found = true;
-                    break;
+                    if(keyArray.get(j).equals("alarm" + i)){
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+//                System.out.println("compare 4 : set id to alarm"+ i);
+                    alarmId = "alarm"+ i;
+                    overall = true;
                 }
             }
-            if(!found){
-//                System.out.println("compare 4 : set id to alarm"+ i);
-                alarmId = "alarm"+ i;
-                overall = true;
+            if(!overall){
+                alarmId = "alarm" + (keyArray.size());
+            }
+
+
+            try{
+                JSONObject newJson = new JSONObject();
+                newJson.put("time" , time);
+                newJson.put("desc" , desc);
+                myRef.child("users").child(alarmId).setValue(newJson.toString());
+                readDb();
+            }
+            catch (Exception e){
             }
         }
-        if(!overall){
-            alarmId = "alarm" + (keyArray.size());
+        catch(Exception e){
+
         }
 
-
-        try{
-            JSONObject newJson = new JSONObject();
-            newJson.put("time" , time);
-            newJson.put("desc" , desc);
-            myRef.child("users").child(alarmId).setValue(newJson.toString());
-            readDb();
-        }
-        catch (Exception e){
-        }
     }
 
     public void deleteDb(String position) {
